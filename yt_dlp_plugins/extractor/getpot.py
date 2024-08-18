@@ -7,10 +7,9 @@ import json
 import typing
 import urllib.parse
 
-from yt_dlp.networking import RequestHandler, Response, Request
-from yt_dlp.networking.common import register_preference
+from yt_dlp.networking.common import register_preference, RequestHandler, Response, Request
 from yt_dlp.networking.exceptions import UnsupportedRequest
-from yt_dlp.utils import parse_qs
+from yt_dlp.utils import parse_qs, classproperty
 
 if typing.TYPE_CHECKING:
     from yt_dlp.YoutubeDL import YoutubeDL
@@ -27,9 +26,9 @@ class GetPOTResponse(Response):
             url=url)
 
 
-class GetPOTRequestHandler(RequestHandler, abc.ABC):
+class GetPOTProviderRH(RequestHandler, abc.ABC):
     _SUPPORTED_URL_SCHEMES = ('get-pot',)
-
+    _PROVIDER_NAME = None
     # Supported Innertube clients, as defined in yt_dlp.extractor.youtube.INNERTUBE_CLIENTS
     _SUPPORTED_CLIENTS = ()
 
@@ -37,6 +36,10 @@ class GetPOTRequestHandler(RequestHandler, abc.ABC):
     # these. They can be used to determine if the request handler supports the features and proxies passed to yt-dlp.
     _SUPPORTED_FEATURES = None
     _SUPPORTED_PROXY_SCHEMES = None
+
+    @classproperty
+    def RH_NAME(cls):
+        return f'getpot-{cls._PROVIDER_NAME or cls.RH_KEY.lower()}'
 
     def _check_extensions(self, extensions):
         super()._check_extensions(extensions)
@@ -100,7 +103,7 @@ class GetPOTRequestHandler(RequestHandler, abc.ABC):
         """
 
 
-@register_preference(GetPOTRequestHandler)
+@register_preference(GetPOTProviderRH)
 def get_pot_preference(_, request):
     if urllib.parse.urlparse(request.url).scheme == 'get-pot':
         return 1000

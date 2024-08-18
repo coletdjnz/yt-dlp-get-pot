@@ -2,14 +2,16 @@
 
 _[what is a PO Token?](https://github.com/yt-dlp/yt-dlp/wiki#po-token-guide)_
 
-A simple plugin and framework for yt-dlp that allows the YouTube extractor to automatically request PO Tokens from an external source when needed. 
+A simple plugin and framework for yt-dlp that allows the YouTube extractor to request PO Tokens from an external source when needed. 
 It makes use <sup>(abuse)</sup> of the yt-dlp HTTP Request Handler framework to allow multiple implementations to co-exist.
 
-To use, a user will need both the client-plugin (this repository) and an implementation plugin installed.
+For example, one plugin could support fetching PO Tokens for logged-out users, while another supports fetching PO Tokens for logged-in users.
+
+To use, a user will need both the client plugin (this plugin) and one or more provider plugins installed.
 
 ## Installing
 
-> Note: this repository only contains the client-side plugin for yt-dlp! It does not contain an implementation to retrieve PO tokens. You will need to install an implementation plugin in addition to this plugin.
+> Note: this repository only contains the client-side plugin for yt-dlp! It does not contain an implementation to retrieve PO tokens. You will need to install a provider plugin in addition to this plugin.
 
 Requires yt-dlp `2024.08.XX` or above.
 
@@ -53,9 +55,9 @@ If installed correctly, you should see the GetPOT YouTubeIE plugin override in `
 
     [debug] Extractor Plugins: GetPOT (YoutubeIE)
 
-## Developing an implementation
+## Developing a Provider plugin
 
-The implementation assumes this plugin is installed. You can define it as a Python dependency in your plugin package, or users can install it manually.
+The provider plugin assumes this plugin is installed. You can define it as a Python dependency in your plugin package, or users can install it manually.
 
 1. Create a new plugin (you can use the [yt-dlp sample plugins template](https://github.com/yt-dlp/yt-dlp-sample-plugins)).
 2. Create a new python file under `yt_dlp_plugins.extractor` (recommend naming it `getpot_<name>.py`).
@@ -76,3 +78,8 @@ To check that your Request Handler is being loaded, run yt-dlp with the `-v` fla
     [debug] Request Handlers: ..., getpot-<name>
 
 For general plugin debugging tips, consult the [yt-dlp plugin development wiki](https://github.com/yt-dlp/yt-dlp/wiki/Plugin-Development).
+
+### Implementation Tips
+
+- Your implementation should consider caching the PO Token for the given parameters to avoid unnecessary requests.
+- See the [PO Token Guide](https://github.com/yt-dlp/yt-dlp/wiki#po-token-guide) for more information on the PO Tokens.

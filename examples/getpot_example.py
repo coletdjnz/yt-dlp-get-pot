@@ -1,15 +1,17 @@
+# Example GetPOT Provider Plugin
+
 import json
 from yt_dlp import YoutubeDL
 
 from yt_dlp.networking.common import Request, register_rh, register_preference
 from yt_dlp.networking.exceptions import RequestError, UnsupportedRequest
-from yt_dlp_plugins.extractor.getpot import GetPOTRequestHandler
+from yt_dlp_plugins.extractor.getpot import GetPOTProviderRH
 
 
 @register_rh
-class ExampleGetPOTRH(GetPOTRequestHandler):
-    # Define a unique name for the request handler. Suggested format is 'getpot-<name>'
-    RH_NAME = 'getpot-example'
+class ExampleGetPOTProviderRH(GetPOTProviderRH):  # ⚠ The class name must end in "RH"
+    # Define a unique display name for the provider
+    _PROVIDER_NAME = 'example'
 
     # Supported Innertube clients, as defined in yt_dlp.extractor.youtube.INNERTUBE_CLIENTS
     _SUPPORTED_CLIENTS = ('web', 'web_embedded', 'web_music')
@@ -53,9 +55,10 @@ class ExampleGetPOTRH(GetPOTRequestHandler):
         return response_json['po_token']
 
 
-# If there are multiple GetPOT request handlers that can handle the same request,
+# If there are multiple GetPOTProvider request handlers that can handle the same request,
 # you can define a preference function to increase/decrease the priority of request handlers.
-# By default, all GetPOT Request handlers are prioritized when a get-pot: request is made.
-@register_preference(ExampleGetPOTRH)
+# By default, all GetPOTProvider request handlers are prioritized when a get-pot: request is made.
+@register_preference(ExampleGetPOTProviderRH)
 def example_getpot_preference(rh, request):
-    return 100  # add +100 to the priority of this request handler
+    # return 100  # add +100 to the priority of this request handler
+    return 0  # default priority
