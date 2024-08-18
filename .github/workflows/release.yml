@@ -79,11 +79,9 @@ jobs:
       - name: Build
         run: |
           rm -rf dist/*
-          make pypi-files
           printf '%s\n\n' \
             'Official repository: <https://github.com/coletdjnz/yt-dlp-get-pot>' > ./README.md.new
           cat ./README.md >> ./README.md.new && mv -f ./README.md.new ./README.md
-          make clean-cache
           python -m build --no-isolation .
 
       - name: Publish to PyPI
