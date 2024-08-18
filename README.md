@@ -6,16 +6,16 @@
 
 _[what is a PO Token?](https://github.com/yt-dlp/yt-dlp/wiki#po-token-guide)_
 
-A simple plugin and framework for yt-dlp that allows the YouTube extractor to request PO Tokens from an external source when needed. 
+A simple plugin framework for yt-dlp that allows the YouTube extractor to request PO Tokens from an external source when needed. 
 It makes use <sup>(abuse)</sup> of the yt-dlp HTTP Request Handler framework to allow multiple implementations to co-exist.
 
-For example, one plugin could support fetching PO Tokens for logged-out users, while another supports fetching PO Tokens for logged-in users.
+> For example, one plugin could support fetching PO Tokens for logged-out users, while another supports fetching PO Tokens for logged-in users.
 
 To use, a user will need both the client plugin (this plugin) and one or more provider plugins installed.
 
 ## Installing
 
-> [!IMPORTANT]:
+> [!IMPORTANT]
 > This repository only contains the **client-side plugin** for yt-dlp!
 > It does not contain an implementation to retrieve PO tokens. **You will need to install a provider plugin in addition to this plugin.**
 
@@ -85,7 +85,8 @@ To check that your Request Handler is being loaded, run yt-dlp with the `-v` fla
 
 For general plugin debugging tips, consult the [yt-dlp plugin development wiki](https://github.com/yt-dlp/yt-dlp/wiki/Plugin-Development).
 
-### Implementation Tips
+### Tips
 
 - Your implementation should consider caching the PO Token for the given parameters to avoid unnecessary requests.
 - See the [PO Token Guide](https://github.com/yt-dlp/yt-dlp/wiki#po-token-guide) for more information on the PO Tokens.
+- If publishing to GitHub, add the `yt-dlp-plugins-get-pot` topic to your repository to help users find your provider plugin.
