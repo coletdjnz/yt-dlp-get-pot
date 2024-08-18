@@ -44,7 +44,7 @@ Alternatively, you can install directly from the repo with `https://github.com/c
 2. Add the zip to one of the [yt-dlp plugin locations](https://github.com/yt-dlp/yt-dlp#installing-plugins)
 
     - User Plugins
-        - `${XDG_CONFIG_HOME}/yt-dlp/plugins` (recommended on Linux/MacOS)
+        - `${XDG_CONFIG_HOME}/yt-dlp/plugins` (recommended on Linux/macOS)
         - `~/.yt-dlp/plugins/`
         - `${APPDATA}/yt-dlp/plugins/` (recommended on Windows)
     
@@ -67,7 +67,7 @@ The provider plugin assumes this plugin is installed. You can define it as a Pyt
 
 1. Create a new plugin (you can use the [yt-dlp sample plugins template](https://github.com/yt-dlp/yt-dlp-sample-plugins)).
 2. Create a new python file under `yt_dlp_plugins.extractor` (recommend naming it `getpot_<name>.py`).
-3. In the plugin file, define a GetPOT Request Handler that extends `yt_dlp_plugins.extractor.getpot.GetPOTRequestHandler`.
+3. In the plugin file, define a GetPOT Request Handler that extends `yt_dlp_plugins.extractor.getpot.GetPOTProviderRH`.
 4. Follow the example below and implement the `_get_pot` method to retrieve the PO Token from your source.
 
 When yt-dlp attempts to get a PO Token, it will call out to the request handler. This is the `Fetching PO Token for <client> client` line you see in the log.
@@ -79,9 +79,11 @@ See [getpot_example.py](examples/getpot_example.py) for an example implementatio
 ### Debugging
 
 To check that your Request Handler is being loaded, run yt-dlp with the `-v` flag and look for the `[debug] Request Handlers` section in the output.
- You should see your request handler listed with the `RH_NAME`:
+ You should see your request handler listed with the `PROVIDER_NAME`:
  
-    [debug] Request Handlers: ..., getpot-<name>
+    [debug] Request Handlers: ..., getpot-<PROVIDER_NAME>
+
+You can use `--print-traffic` to see if your provider request handler is being called.
 
 For general plugin debugging tips, consult the [yt-dlp plugin development wiki](https://github.com/yt-dlp/yt-dlp/wiki/Plugin-Development).
 
