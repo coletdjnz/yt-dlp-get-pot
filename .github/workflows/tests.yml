@@ -16,7 +16,7 @@ jobs:
         python-version: '3.8'
 
     - name: Install test requirements
-      run: python -m pip install --upgrade pytest hatchling .
+      run: python -m pip install --upgrade pytest hatchling yt-dlp@https://github.com/seproDev/yt-dlp/archive/refs/heads/pass_po_token.zip
 
     - name: Run tests
       run: |
