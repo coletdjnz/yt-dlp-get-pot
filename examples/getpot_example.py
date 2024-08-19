@@ -3,13 +3,13 @@
 import json
 from yt_dlp import YoutubeDL
 
-from yt_dlp.networking.common import Request, register_rh, register_preference
+from yt_dlp.networking.common import Request
 from yt_dlp.networking.exceptions import RequestError, UnsupportedRequest
-from yt_dlp_plugins.extractor.getpot import GetPOTProviderRH
+from yt_dlp_plugins.extractor.getpot import GetPOTProvider, register_provider, register_preference
 
 
-@register_rh
-class ExampleGetPOTProviderRH(GetPOTProviderRH):  # ⚠ The class name must end in "RH"
+@register_provider
+class ExampleGetPOTProviderRH(GetPOTProvider):  # ⚠ The class name must end in "RH"
     # Define a unique display name for the provider
     _PROVIDER_NAME = 'example'
 

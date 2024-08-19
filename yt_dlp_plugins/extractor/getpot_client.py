@@ -1,15 +1,33 @@
+from __future__ import annotations
+
 import base64
 import json
+import typing
+
 from yt_dlp.extractor.youtube import YoutubeIE
 from yt_dlp.networking import Request
 from yt_dlp.networking.exceptions import NoSupportingHandlers, RequestError
 from yt_dlp.utils import update_url_query, ExtractorError
+
+if typing.TYPE_CHECKING:
+    from yt_dlp.YoutubeDL import YoutubeDL
+    from yt_dlp.networking.common import RequestDirector
 
 
 class _GetPOTClient(YoutubeIE, plugin_name='GetPOT'):
     """
     Plugin to inject GetPOT request into the YouTube extractor.
     """
+
+    def set_downloader(self, downloader: YoutubeDL):
+        super().set_downloader(downloader)
+        if downloader:
+            self._provider_rd: RequestDirector = self._downloader.build_request_director(
+                YoutubeIE._GETPOT_PROVIDERS.values(), YoutubeIE._GETPOT_PROVIDER_PREFERENCES)
+            downloader.write_debug(
+                f'PO Token Providers: {", ".join(rh.RH_NAME for rh in self._provider_rd.handlers.values())}',
+                only_once=True)
+
     def _fetch_po_token(self, client, visitor_data=None, data_sync_id=None, player_url=None, **kwargs):
         # use any existing implementation
         pot = super()._fetch_po_token(
@@ -35,10 +53,10 @@ class _GetPOTClient(YoutubeIE, plugin_name='GetPOT'):
         })
 
         try:
-            pot_response = self._download_json(
-                Request(url, extensions={'ydl': self._downloader}),
-                video_id='GetPOT', note=f'Fetching PO Token for {client} client'
-            )
+            self.to_screen(f'GetPOT: Fetching PO Token for {client} client')
+            pot_response = self._parse_json(
+                self._provider_rd.send(Request(url, extensions={'ydl': self._downloader})).read(),
+                video_id='GetPOT')
 
         except NoSupportingHandlers:
             self.write_debug(f'No GetPOT handler available for client {client}')

@@ -1,4 +1,4 @@
-# Get PO Token Plugin Framework for yt-dlp
+# PO Token Plugin Framework for yt-dlp
 
 > [!CAUTION]
 > This plugin is not ready for general use and is awaiting changes to be merged in yt-dlp for it to be functional.
@@ -67,7 +67,7 @@ The provider plugin assumes this plugin is installed. You can define it as a Pyt
 
 1. Create a new plugin (you can use the [yt-dlp sample plugins template](https://github.com/yt-dlp/yt-dlp-sample-plugins)).
 2. Create a new python file under `yt_dlp_plugins.extractor` (recommend naming it `getpot_<name>.py`).
-3. In the plugin file, define a GetPOT Request Handler that extends `yt_dlp_plugins.extractor.getpot.GetPOTProviderRH`.
+3. In the plugin file, define a Provider that extends `yt_dlp_plugins.extractor.getpot.GetPOTProvider`.
 4. Follow the example below and implement the `_get_pot` method to retrieve the PO Token from your source.
 
 When yt-dlp attempts to get a PO Token, it will call out to the request handler. This is the `Fetching PO Token for <client> client` line you see in the log.
@@ -78,10 +78,10 @@ See [getpot_example.py](examples/getpot_example.py) for an example implementatio
 
 ### Debugging
 
-To check that your Request Handler is being loaded, run yt-dlp with the `-v` flag and look for the `[debug] Request Handlers` section in the output.
+To check that your Provider is being loaded, run yt-dlp with the `-v` flag and a YouTube video, and look for the `[debug] PO Token Providers` section in the output.
  You should see your request handler listed with the `PROVIDER_NAME`:
  
-    [debug] Request Handlers: ..., getpot-<PROVIDER_NAME>
+    [debug] PO Token Providers: getpot-<PROVIDER_NAME>
 
 You can use `--print-traffic` to see if your provider request handler is being called.
 

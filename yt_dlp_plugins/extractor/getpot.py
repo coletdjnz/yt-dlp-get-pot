@@ -2,17 +2,18 @@ from __future__ import annotations
 
 import abc
 import base64
+import functools
 import io
 import json
 import typing
 import urllib.parse
 
-from yt_dlp.networking.common import register_preference, RequestHandler, Response, Request
+from yt_dlp.networking.common import RequestHandler, Response, Request
 from yt_dlp.networking.exceptions import UnsupportedRequest
 from yt_dlp.utils import parse_qs, classproperty
 
-if typing.TYPE_CHECKING:
-    from yt_dlp.YoutubeDL import YoutubeDL
+__version__ = '0.0.1'
+__all__ = ['GetPOTProvider', 'register_provider', 'register_preference']
 
 
 class GetPOTResponse(Response):
@@ -26,7 +27,7 @@ class GetPOTResponse(Response):
             url=url)
 
 
-class GetPOTProviderRH(RequestHandler, abc.ABC):
+class GetPOTProvider(RequestHandler, abc.ABC):
     _SUPPORTED_URL_SCHEMES = ('get-pot',)
     _PROVIDER_NAME = None
     # Supported Innertube clients, as defined in yt_dlp.extractor.youtube.INNERTUBE_CLIENTS
@@ -76,7 +77,8 @@ class GetPOTProviderRH(RequestHandler, abc.ABC):
 
         return GetPOTResponse(request.url, po_token=pot)
 
-    def _validate_get_pot(self, client: str, ydl: YoutubeDL, visitor_data=None, data_sync_id=None, player_url=None, **kwargs):
+    def _validate_get_pot(self, client: str, ydl: YoutubeDL, visitor_data=None, data_sync_id=None, player_url=None,
+                          **kwargs):
         """
         Validate the GetPOT request.
         :param client: Innertube client, from yt_dlp.extractor.youtube.INNERTUBE_CLIENTS.
@@ -89,7 +91,8 @@ class GetPOTProviderRH(RequestHandler, abc.ABC):
         """
 
     @abc.abstractmethod
-    def _get_pot(self, client: str, ydl: YoutubeDL, visitor_data=None, data_sync_id=None, player_url=None, **kwargs) -> str:
+    def _get_pot(self, client: str, ydl: YoutubeDL, visitor_data=None, data_sync_id=None, player_url=None,
+                 **kwargs) -> str:
         """
         Get a PO Token
         :param client: Innertube client, from yt_dlp.extractor.youtube.INNERTUBE_CLIENTS.
@@ -103,7 +106,45 @@ class GetPOTProviderRH(RequestHandler, abc.ABC):
         """
 
 
-@register_preference(GetPOTProviderRH)
+if typing.TYPE_CHECKING:
+    from yt_dlp.YoutubeDL import YoutubeDL
+
+    Preference = typing.Callable[[GetPOTProvider, Request], int]
+
+from yt_dlp.extractor.youtube import YoutubeIE
+
+if not hasattr(YoutubeIE, '_GETPOT_PROVIDER_PREFERENCES'):
+    YoutubeIE._GETPOT_PROVIDER_PREFERENCES = set()
+
+if not hasattr(YoutubeIE, '_GETPOT_PROVIDERS'):
+    YoutubeIE._GETPOT_PROVIDERS = {}
+
+
+def register_preference(*handlers: type[GetPOTProvider]):
+    assert all(issubclass(handler, GetPOTProvider) for handler in handlers)
+
+    def outer(preference: Preference):
+        @functools.wraps(preference)
+        def inner(handler, *args, **kwargs):
+            if not handlers or isinstance(handler, handlers):
+                return preference(handler, *args, **kwargs)
+            return 0
+
+        YoutubeIE._GETPOT_PROVIDER_PREFERENCES.add(inner)
+        return inner
+
+    return outer
+
+
+def register_provider(provider):
+    """Register a GetPOTProvider class"""
+    assert issubclass(provider, GetPOTProvider), f'{provider} must be a subclass of GetPOTProvider'
+    assert provider.RH_KEY not in YoutubeIE._GETPOT_PROVIDERS, f'Provider {provider.RH_KEY} already registered'
+    YoutubeIE._GETPOT_PROVIDERS[provider.RH_KEY] = provider
+    return provider
+
+
+@register_preference(GetPOTProvider)
 def get_pot_preference(_, request):
     if urllib.parse.urlparse(request.url).scheme == 'get-pot':
         return 1000
