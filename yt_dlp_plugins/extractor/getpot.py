@@ -12,7 +12,7 @@ from yt_dlp.networking.common import RequestHandler, Response, Request
 from yt_dlp.networking.exceptions import UnsupportedRequest
 from yt_dlp.utils import parse_qs, classproperty
 
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 __all__ = ['GetPOTProvider', 'register_provider', 'register_preference']
 
 
