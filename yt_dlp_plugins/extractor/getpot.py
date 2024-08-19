@@ -14,6 +14,8 @@ from yt_dlp.utils import parse_qs, classproperty
 if typing.TYPE_CHECKING:
     from yt_dlp.YoutubeDL import YoutubeDL
 
+__version__ = '0.0.1'
+
 
 class GetPOTResponse(Response):
     def __init__(self, url, po_token):
