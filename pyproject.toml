@@ -12,7 +12,7 @@ keywords = ["yt-dlp", "yt-dlp-plugin"]
 authors = [
   { name = "coletdjnz", email = "coletdjnz@protonmail.com" },
 ]
-dependencies = []
+dependencies = ["yt_dlp@https://github.com/seproDev/yt-dlp/archive/refs/heads/pass_po_token.zip"]
 
 [tool.hatch.env.default]
 installer = "uv"
@@ -20,3 +20,6 @@ path = ".venv"
 
 [tool.hatch.build.targets.wheel]
 packages = ["yt_dlp_plugins"]
+
+[tool.hatch.metadata]
+allow-direct-references = true

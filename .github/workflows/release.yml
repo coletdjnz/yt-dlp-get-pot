@@ -47,7 +47,7 @@ jobs:
         mkdir bundle/
         cp -r yt_dlp_plugins bundle/
         while IFS=';' read -r name path; do
-          if [[ ! "${name}" =~ ^(pip|setuptools|wheel)$ ]]; then
+          if [[ ! "${name}" =~ ^(pip|setuptools|wheel|yt-dlp)$ ]]; then
             package_name="$(tr '[:upper:]' '[:lower:]' <<<"${name}" | sed 's/-/_/g')"
             cp -r "${path}/${package_name}" bundle/
           fi
