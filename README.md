@@ -23,7 +23,7 @@ Requires yt-dlp `2024.08.XX` or above.
 
 If yt-dlp is installed through `pip` or `pipx`, you can install the plugin with the following:
 
-**pip or pipx**
+### pip/pipx
 
 ```
 pipx inject yt-dlp yt-dlp-get-pot
@@ -37,7 +37,7 @@ python3 -m pip install -U yt-dlp-get-pot
 
 Alternatively, you can install directly from the repo with `https://github.com/coletdjnz/yt-dlp-get-pot/archive/refs/heads/master.zip`
 
-**Manual install**
+### Manual install
 
 1. Download the latest release zip from [releases](https://github.com/coletdjnz/yt-dlp-get-pot/releases) 
 
@@ -68,13 +68,26 @@ The provider plugin assumes this plugin is installed. You can define it as a Pyt
 1. Create a new plugin (you can use the [yt-dlp sample plugins template](https://github.com/yt-dlp/yt-dlp-sample-plugins)).
 2. Create a new python file under `yt_dlp_plugins.extractor` (recommend naming it `getpot_<name>.py`).
 3. In the plugin file, define a Provider that extends `yt_dlp_plugins.extractor.getpot.GetPOTProvider`.
-4. Follow the example below and implement the `_get_pot` method to retrieve the PO Token from your source.
+4. Implement `_get_pot` method to retrieve the PO Token from your source.
 
-When yt-dlp attempts to get a PO Token, it will call out to the request handler. This is the `Fetching PO Token for <client> client` line you see in the log.
+It should look something like:
 
-### Example
+```python
+from yt_dlp_plugins.extractor.getpot import GetPOTProvider, register_provider
 
-See [getpot_example.py](examples/getpot_example.py) for an example implementation.
+@register_provider
+class MyProviderRH(GetPOTProvider):
+   _PROVIDER_NAME = 'myprovider'
+   _SUPPORTED_CLIENTS = ('web', )
+   
+   def _get_pot(self, client, ydl, visitor_data=None, data_sync_id=None, **kwargs):
+        # Implement your PO Token retrieval here
+        return 'PO_TOKEN'
+```
+
+See [getpot_example.py](examples/getpot_example.py) for a more in-depth example.
+
+When yt-dlp attempts to get a PO Token, it will call out to the Provider. This is the `Fetching PO Token for <client> client` line you see in the log.
 
 ### Debugging
 
