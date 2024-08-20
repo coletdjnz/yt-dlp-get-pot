@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import abc
-import base64
 import functools
 import io
 import json
@@ -10,7 +9,9 @@ import urllib.parse
 
 from yt_dlp.networking.common import RequestHandler, Response, Request
 from yt_dlp.networking.exceptions import UnsupportedRequest
-from yt_dlp.utils import parse_qs, classproperty
+from yt_dlp.utils import classproperty
+from yt_dlp.YoutubeDL import YoutubeDL
+
 
 __version__ = '0.0.2'
 __all__ = ['GetPOTProvider', 'register_provider', 'register_preference']
@@ -45,32 +46,35 @@ class GetPOTProvider(RequestHandler, abc.ABC):
     def _check_extensions(self, extensions):
         super()._check_extensions(extensions)
         extensions.pop('ydl', None)
+        extensions.pop('getpot', None)
 
-    def _parse_getpot_request(self, request):
-        query = parse_qs(request.url)['q'][0]
-        return json.loads(base64.urlsafe_b64decode(query.encode('utf-8')).decode('utf-8'))
-
-    def _validate(self, request):
+    def _validate(self, request: Request):
         super()._validate(request)
-        try:
-            pot_request = self._parse_getpot_request(request)
-        except Exception:
-            raise UnsupportedRequest('Malformed GetPOT request')
 
-        if pot_request['client'] not in self._SUPPORTED_CLIENTS:
-            raise UnsupportedRequest(f'Client {pot_request["client"]} is not supported')
+        if not isinstance(request.extensions.get('ydl'), YoutubeDL):
+            raise UnsupportedRequest('YoutubeDL instance not provided')
+
+        pot_request = request.extensions.get('getpot')
+        if not isinstance(pot_request, dict) or 'client' not in pot_request:
+            raise UnsupportedRequest('Malformed GetPOT Request')
+
+        pot_request = pot_request.copy()
+        client = pot_request.pop('client')
+
+        if client not in self._SUPPORTED_CLIENTS:
+            raise UnsupportedRequest(f'Client {client} is not supported')
 
         self._validate_get_pot(
-            client=pot_request.pop('client', None),
+            client=client,
             ydl=request.extensions.get('ydl'),
             **pot_request
         )
 
     def _send(self, request: Request):
-        pot_request = self._parse_getpot_request(request)
+        pot_request = request.extensions.get('getpot').copy()
 
         pot = self._get_pot(
-            client=pot_request.pop('client', None),
+            client=pot_request.pop('client'),
             ydl=request.extensions.get('ydl'),
             **pot_request
         )
@@ -107,8 +111,6 @@ class GetPOTProvider(RequestHandler, abc.ABC):
 
 
 if typing.TYPE_CHECKING:
-    from yt_dlp.YoutubeDL import YoutubeDL
-
     Preference = typing.Callable[[GetPOTProvider, Request], int]
 
 from yt_dlp.extractor.youtube import YoutubeIE

@@ -41,21 +41,18 @@ class _GetPOTClient(YoutubeIE, plugin_name='GetPOT'):
         if pot:
             return pot
 
-        payload = {
+        params = {
             'client': client,
             'visitor_data': visitor_data,
             'data_sync_id': data_sync_id,
             'player_url': player_url,
+            **kwargs
         }
-
-        url = update_url_query('get-pot:', {
-            'q': base64.urlsafe_b64encode(json.dumps(payload).encode('utf-8')).decode('utf-8'),
-        })
 
         try:
             self.to_screen(f'GetPOT: Fetching PO Token for {client} client')
             pot_response = self._parse_json(
-                self._provider_rd.send(Request(url, extensions={'ydl': self._downloader})).read(),
+                self._provider_rd.send(Request('get-pot:', extensions={'ydl': self._downloader, 'getpot': params})).read(),
                 video_id='GetPOT')
 
         except NoSupportingHandlers:
