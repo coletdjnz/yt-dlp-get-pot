@@ -6,8 +6,8 @@
 
 _[what is a PO Token?](https://github.com/yt-dlp/yt-dlp/wiki#po-token-guide)_
 
-A simple plugin framework for yt-dlp that allows the YouTube extractor to request PO Tokens from an external source when needed. 
-It makes use <sup>(abuse)</sup> of the yt-dlp HTTP Request Handler framework to allow multiple implementations to co-exist.
+A plugin framework for yt-dlp that allows the YouTube extractor to request Proof of Origin (PO) Tokens from an external source when needed. 
+It allows for multiple providers to co-exist and provide PO Tokens for different scenarios.
 
 > For example, one plugin could support fetching PO Tokens for logged-out users, while another supports fetching PO Tokens for logged-in users.
 
@@ -34,8 +34,6 @@ or
 python3 -m pip install -U yt-dlp-get-pot
 ```
 
-
-Alternatively, you can install directly from the repo with `https://github.com/coletdjnz/yt-dlp-get-pot/archive/refs/heads/master.zip`
 
 ### Manual install
 
@@ -102,6 +100,7 @@ For general plugin debugging tips, consult the [yt-dlp plugin development wiki](
 
 ### Tips
 
-- Your implementation should consider caching the PO Token for the given parameters to avoid unnecessary requests.
 - See the [PO Token Guide](https://github.com/yt-dlp/yt-dlp/wiki#po-token-guide) for more information on the PO Tokens.
+- Your implementation should consider caching the PO Token for the given parameters to avoid unnecessary requests.
 - If publishing to GitHub, add the `yt-dlp-plugins-get-pot` topic to your repository to help users find your provider plugin.
+- A provider is a customized yt-dlp HTTP Request Handler, so any parameters and functions that are available to the `RequestHandler` are also available to a `Provider`. Check out `yt_dlp.networking.common.RequestHandler` to see more.
