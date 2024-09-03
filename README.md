@@ -13,6 +13,13 @@ It allows for multiple providers to co-exist and provide PO Tokens for different
 
 To use, a user will need both the client plugin (this plugin) and one or more provider plugins installed.
 
+* [Installing](#installing)
+  * [pip/pipx](#pippipx)
+  * [Manual install](#manual-install)
+* [Developing a Provider plugin](#developing-a-provider-plugin)
+  * [Debugging](#debugging)
+  * [Tips](#tips)
+
 ## Installing
 
 > [!IMPORTANT]
