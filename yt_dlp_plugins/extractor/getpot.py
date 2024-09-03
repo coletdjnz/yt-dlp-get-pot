@@ -14,7 +14,7 @@ from yt_dlp.YoutubeDL import YoutubeDL
 
 
 __version__ = '0.0.2'
-__all__ = ['GetPOTProvider', 'register_provider', 'register_preference']
+__all__ = ['GetPOTProvider', 'register_provider', 'register_preference', '__version__']
 
 
 class GetPOTResponse(Response):
