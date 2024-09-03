@@ -2,7 +2,7 @@ import json
 import pytest
 from yt_dlp.networking import Request
 from yt_dlp.networking.exceptions import UnsupportedRequest, RequestError
-from yt_dlp_plugins.extractor.getpot import GetPOTProvider, register_provider, register_preference
+from yt_dlp_plugins.extractor.getpot import GetPOTProvider, register_provider, register_preference, __version__
 from yt_dlp import YoutubeDL
 
 
@@ -59,6 +59,13 @@ def test_preference_registration():
     with YoutubeDL() as ydl:
         ie = ydl.get_info_extractor('Youtube')
         assert a_test_preference in ie._provider_rd.preferences
+
+
+def test_imports():
+    assert isinstance(__version__, str)
+    assert GetPOTProvider
+    assert register_provider
+    assert register_preference
 
 
 class TestClient:

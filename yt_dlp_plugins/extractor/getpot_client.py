@@ -1,17 +1,17 @@
 from __future__ import annotations
 
-import base64
-import json
 import typing
 
 from yt_dlp.extractor.youtube import YoutubeIE
 from yt_dlp.networking import Request
 from yt_dlp.networking.exceptions import NoSupportingHandlers, RequestError
-from yt_dlp.utils import update_url_query, ExtractorError
+from yt_dlp.utils import ExtractorError
 
 if typing.TYPE_CHECKING:
     from yt_dlp.YoutubeDL import YoutubeDL
     from yt_dlp.networking.common import RequestDirector
+
+from yt_dlp_plugins.extractor.getpot import __version__
 
 
 class _GetPOTClient(YoutubeIE, plugin_name='GetPOT'):
@@ -24,8 +24,9 @@ class _GetPOTClient(YoutubeIE, plugin_name='GetPOT'):
         if downloader:
             self._provider_rd: RequestDirector = self._downloader.build_request_director(
                 YoutubeIE._GETPOT_PROVIDERS.values(), YoutubeIE._GETPOT_PROVIDER_PREFERENCES)
+            downloader.write_debug(f'GetPOT plugin version {__version__}', only_once=True)
             downloader.write_debug(
-                f'PO Token Providers: {", ".join(rh.RH_NAME for rh in self._provider_rd.handlers.values())}',
+                f'PO Token Providers: {", ".join(rh.RH_NAME for rh in self._provider_rd.handlers.values()) or "none"}',
                 only_once=True)
 
     def _fetch_po_token(self, client, visitor_data=None, data_sync_id=None, player_url=None, **kwargs):
