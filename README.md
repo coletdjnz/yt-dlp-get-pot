@@ -18,6 +18,7 @@ To use, a user will need both the client plugin (this plugin) and one or more pr
 > [!IMPORTANT]
 > This repository only contains the **client-side plugin** for yt-dlp!
 > It does not contain an implementation to retrieve PO tokens. **You will need to install a provider plugin in addition to this plugin.**
+> 
 > You may be able to find provider plugins in the [yt-dlp-plugins-get-pot](https://github.com/topics/yt-dlp-plugins-get-pot) topic.
 
 Requires yt-dlp `2024.08.XX` or above.
