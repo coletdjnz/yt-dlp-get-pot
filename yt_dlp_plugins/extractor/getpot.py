@@ -5,7 +5,6 @@ import functools
 import io
 import json
 import typing
-import urllib.parse
 
 from yt_dlp.networking.common import RequestHandler, Response, Request
 from yt_dlp.networking.exceptions import UnsupportedRequest
@@ -84,7 +83,7 @@ class GetPOTProvider(RequestHandler, abc.ABC):
     def _validate_get_pot(self, client: str, ydl: YoutubeDL, visitor_data=None, data_sync_id=None, player_url=None,
                           **kwargs):
         """
-        Validate the GetPOT request.
+        Validate and check the GetPOT request is supported.
         :param client: Innertube client, from yt_dlp.extractor.youtube.INNERTUBE_CLIENTS.
         :param ydl: YoutubeDL instance.
         :param visitor_data: Visitor Data.
@@ -144,10 +143,3 @@ def register_provider(provider):
     assert provider.RH_KEY not in YoutubeIE._GETPOT_PROVIDERS, f'Provider {provider.RH_KEY} already registered'
     YoutubeIE._GETPOT_PROVIDERS[provider.RH_KEY] = provider
     return provider
-
-
-@register_preference(GetPOTProvider)
-def get_pot_preference(_, request):
-    if urllib.parse.urlparse(request.url).scheme == 'get-pot':
-        return 1000
-    return -1000
