@@ -13,7 +13,7 @@ from yt_dlp.utils import classproperty
 from yt_dlp.YoutubeDL import YoutubeDL
 
 
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 __all__ = ['GetPOTProvider', 'register_provider', 'register_preference', '__version__']
 
 
