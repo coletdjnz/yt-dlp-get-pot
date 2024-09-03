@@ -18,6 +18,8 @@ To use, a user will need both the client plugin (this plugin) and one or more pr
 > [!IMPORTANT]
 > This repository only contains the **client-side plugin** for yt-dlp!
 > It does not contain an implementation to retrieve PO tokens. **You will need to install a provider plugin in addition to this plugin.**
+> 
+> You may be able to find provider plugins in the [yt-dlp-plugins-get-pot](https://github.com/topics/yt-dlp-plugins-get-pot) topic.
 
 Requires yt-dlp `2024.08.XX` or above.
 
@@ -102,5 +104,6 @@ For general plugin debugging tips, consult the [yt-dlp plugin development wiki](
 
 - See the [PO Token Guide](https://github.com/yt-dlp/yt-dlp/wiki#po-token-guide) for more information on the PO Tokens.
 - Your implementation should consider caching the PO Token for the given parameters to avoid unnecessary requests.
-- If publishing to GitHub, add the `yt-dlp-plugins-get-pot` topic to your repository to help users find your provider plugin.
+- If publishing to GitHub, add the [yt-dlp-plugins-get-pot](https://github.com/topics/yt-dlp-plugins-get-pot) topic to your repository to help users find your provider plugin.
+- If publishing to PyPi, add the `yt-dlp-plugins-get-pot` keyword to your package to help users find your provider plugin.
 - A provider is a customized yt-dlp HTTP Request Handler, so any parameters and functions that are available to the `RequestHandler` are also available to a `Provider`. Check out `yt_dlp.networking.common.RequestHandler` to see more.

@@ -7,8 +7,8 @@ name = "yt-dlp-get-pot"
 version = "0.0.2"
 readme = "README.md"
 requires-python = ">=3.8"
-license = "Unlicense"
-keywords = ["yt-dlp", "yt-dlp-plugin"]
+license = { file = "LICENSE"}
+keywords = ["yt-dlp", "yt-dlp-plugin", "yt-dlp-plugins-get-pot"]
 authors = [
   { name = "coletdjnz", email = "coletdjnz@protonmail.com" },
 ]
