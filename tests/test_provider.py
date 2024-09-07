@@ -1,7 +1,7 @@
 import json
 import pytest
 from yt_dlp.networking import Request
-from yt_dlp.networking.exceptions import UnsupportedRequest, RequestError
+from yt_dlp.networking.exceptions import UnsupportedRequest, RequestError, NoSupportingHandlers
 from yt_dlp_plugins.extractor.getpot import GetPOTProvider, register_provider, register_preference, __version__
 from yt_dlp import YoutubeDL
 
@@ -31,6 +31,9 @@ class ExampleProviderRH(GetPOTProvider):
     def _get_pot(self, client: str, ydl: YoutubeDL, visitor_data=None, data_sync_id=None, player_url=None, **kwargs):
         if kwargs.get('error_scenario') == 'network':
             raise RequestError('Network Error')
+        elif kwargs.get('error_scenario') == 'no_supported_handlers':
+            ydl.urlopen(Request('invalid://example.com/get_pot'))
+
         return json.dumps({
             'client': client,
             'visitor_data': visitor_data,
@@ -126,3 +129,16 @@ class TestProviderValidation:
             params = {'client': 'web'}
             provider.validate(Request('get-pot:', extensions={'getpot': params, 'ydl': ydl}))
             assert params.get('client') == 'web'
+
+
+class TestProvider:
+    def test_no_supporting_handlers_wrap(self):
+        # If calling ydl.urlopen in a provider plugin and no handlers support the request, NoSupportingHandlers is
+        # raised. We should catch this exception and turn it into a plain RequestError
+
+        with YoutubeDL() as ydl, ExampleProviderRH(logger=FakeLogger()) as provider:
+            with pytest.raises(RequestError) as exc_info:
+                provider.send(Request('get-pot:', extensions={
+                    'getpot': {'client': 'web', 'error_scenario': 'no_supported_handlers'}, 'ydl': ydl}))
+
+            assert type(exc_info.value) is not NoSupportingHandlers

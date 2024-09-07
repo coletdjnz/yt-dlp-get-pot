@@ -7,7 +7,7 @@ import json
 import typing
 
 from yt_dlp.networking.common import RequestHandler, Response, Request
-from yt_dlp.networking.exceptions import UnsupportedRequest
+from yt_dlp.networking.exceptions import UnsupportedRequest, NoSupportingHandlers, RequestError
 from yt_dlp.utils import classproperty
 from yt_dlp.YoutubeDL import YoutubeDL
 
@@ -71,14 +71,15 @@ class GetPOTProvider(RequestHandler, abc.ABC):
 
     def _send(self, request: Request):
         pot_request = request.extensions.get('getpot').copy()
-
-        pot = self._get_pot(
-            client=pot_request.pop('client'),
-            ydl=request.extensions.get('ydl'),
-            **pot_request
-        )
-
-        return GetPOTResponse(request.url, po_token=pot)
+        try:
+            pot = self._get_pot(
+                client=pot_request.pop('client'),
+                ydl=request.extensions.get('ydl'),
+                **pot_request
+            )
+            return GetPOTResponse(request.url, po_token=pot)
+        except NoSupportingHandlers as e:
+            raise RequestError(cause=e) from e
 
     def _validate_get_pot(self, client: str, ydl: YoutubeDL, visitor_data=None, data_sync_id=None, player_url=None,
                           **kwargs):
