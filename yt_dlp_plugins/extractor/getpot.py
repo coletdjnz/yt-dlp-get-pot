@@ -27,6 +27,31 @@ class GetPOTResponse(Response):
             url=url)
 
 
+class ProviderLogger:
+    def __init__(self, provider_name, logger=None):
+        self._logger = logger
+        self._provider_name = provider_name
+
+    def format(self, message):
+        return f'[GetPOT] {self._provider_name}: {message}'
+
+    def debug(self, message):
+        if self._logger:
+            self._logger.debug(self.format(message))
+
+    def info(self, message):
+        if self._logger:
+            self._logger.info(self.format(message))
+
+    def warning(self, message, *, once=False):
+        if self._logger:
+            self._logger.warning(self.format(message), once)
+
+    def error(self, message, *, is_error=True):
+        if self._logger:
+            self._logger.error(self.format(message), is_error=is_error)
+
+
 class GetPOTProvider(RequestHandler, abc.ABC):
     _SUPPORTED_URL_SCHEMES = ('get-pot',)
     _PROVIDER_NAME = None
@@ -38,9 +63,13 @@ class GetPOTProvider(RequestHandler, abc.ABC):
     _SUPPORTED_FEATURES = None
     _SUPPORTED_PROXY_SCHEMES = None
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._logger = ProviderLogger(self.RH_NAME, self._logger)
+
     @classproperty
     def RH_NAME(cls):
-        return f'getpot-{cls._PROVIDER_NAME or cls.RH_KEY.lower()}'
+        return cls._PROVIDER_NAME or cls.RH_KEY.lower()
 
     def _check_extensions(self, extensions):
         super()._check_extensions(extensions)
