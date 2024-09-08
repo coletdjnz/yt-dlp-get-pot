@@ -94,23 +94,23 @@ class MyProviderRH(GetPOTProvider):
 
 See [getpot_example.py](examples/getpot_example.py) for a more in-depth example.
 
-When yt-dlp attempts to get a PO Token, it will call out to the Provider. This is the `Fetching PO Token for <client> client` line you see in the log.
+When yt-dlp attempts to get a PO Token, it will call out to available providers. This is the `Fetching PO Token for <client> client` line you see in the verbose log.
 
 ### Debugging
 
-To check that your Provider is being loaded, run yt-dlp with the `-v` flag and a YouTube video, and look for the `[debug] PO Token Providers` section in the output.
- You should see your request handler listed with the `PROVIDER_NAME`:
+To check that your provider is being loaded, run yt-dlp with the `-v` flag and a YouTube video, and look for the `PO Token Providers` line in the output.
+ You should see your provider listed:
  
-    [debug] PO Token Providers: getpot-<PROVIDER_NAME>
+    [debug] [GetPOT] PO Token Providers: <PROVIDER_NAME>
 
-You can use `--print-traffic` to see if your provider request handler is being called.
+You can use `--print-traffic` to see if your provider is being called.
 
 For general plugin debugging tips, consult the [yt-dlp plugin development wiki](https://github.com/yt-dlp/yt-dlp/wiki/Plugin-Development).
 
 ### Tips
 
-- See the [PO Token Guide](https://github.com/yt-dlp/yt-dlp/wiki#po-token-guide) for more information on the PO Tokens.
 - Your implementation should consider caching the PO Token for the given parameters to avoid unnecessary requests.
 - If publishing to GitHub, add the [yt-dlp-plugins-get-pot](https://github.com/topics/yt-dlp-plugins-get-pot) topic to your repository to help users find your provider plugin.
 - If publishing to PyPI, add the `yt-dlp-plugins-get-pot` keyword to your package to help users find your provider plugin.
-- A provider is a customized yt-dlp HTTP Request Handler, so any parameters and functions that are available to the `RequestHandler` are also available to a `Provider`. Check out `yt_dlp.networking.common.RequestHandler` to see more.
+- The [PO Token Guide](https://github.com/yt-dlp/yt-dlp/wiki#po-token-guide) has more information on PO Tokens.
+- Advanced: A `Provider` is a customized yt-dlp HTTP Request Handler, so any parameters and functions that are available to the `RequestHandler` are also available to a `Provider`. Check out `yt_dlp.networking.common.RequestHandler` to see more.
