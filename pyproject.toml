@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "yt-dlp-get-pot"
-version = "0.0.4"
+version = "0.0.3"
 readme = "README.md"
 requires-python = ">=3.8"
 license = { file = "LICENSE"}
