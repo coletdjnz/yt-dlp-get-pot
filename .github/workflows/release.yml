@@ -63,7 +63,7 @@ jobs:
         cd bundle/
         find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
         zip -9 --recurse-paths "${project_name}" *
-        gh release create "${version}" --latest \
+        gh release create "${version}" \
           --title "${project_name} ${version}" \
           --notes "${{ steps.changelog_reader.outputs.changes }}" \
           --prerelease \
