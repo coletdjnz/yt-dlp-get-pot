@@ -25,8 +25,7 @@ jobs:
         echo "::group::Variables"
         cat << EOF | tee -a "$GITHUB_OUTPUT"
         tag=${tag}
-        version_raw=$(hatch project metadata | jq -r .version)
-        version=v$(hatch project metadata | jq -r .version)
+        version=$(hatch project metadata | jq -r .version)
         project_name=$(hatch project metadata | jq -r .name)
         EOF
         echo "::endgroup::"
@@ -35,13 +34,13 @@ jobs:
       uses: mindsers/changelog-reader-action@v2
       with:
         validation_level: error
-        version: ${{ steps.set_variables.outputs.version_raw }}
+        version: ${{ steps.set_variables.outputs.version }}
         path: ./CHANGELOG.md
     - name: Bundle release
       env:
         GH_TOKEN: ${{ github.token }}
         tag: ${{ steps.set_variables.outputs.tag }}
-        version: ${{ steps.set_variables.outputs.version }}
+        version: v${{ steps.set_variables.outputs.version }}
       if: |
         env.tag != env.version
       run: |
@@ -67,8 +66,8 @@ jobs:
     - name: Create release
       uses: ncipollo/release-action@v1
       with:
-        tag: ${{ steps.set_variables.outputs.version }}
-        name: ${{ steps.set_variables.outputs.project_name }} ${{ steps.set_variables.outputs.version }}
+        tag: v${{ steps.set_variables.outputs.version }}
+        name: ${{ steps.set_variables.outputs.project_name }} v${{ steps.set_variables.outputs.version }}
         body: ${{ steps.changelog_reader.outputs.changes }}
         makeLatest: true
         artifacts: bundle/${{ steps.set_variables.outputs.project_name }}.zip
