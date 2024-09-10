@@ -58,6 +58,9 @@ class GetPOTProvider(RequestHandler, abc.ABC):
     # Supported Innertube clients, as defined in yt_dlp.extractor.youtube.INNERTUBE_CLIENTS
     _SUPPORTED_CLIENTS = ()
 
+    # Version of the provider. Shown in debug output for debugging purposes.
+    VERSION = None
+
     # If your request handler calls out to an external source (e.g. a browser), and not via ydl, you should define
     # these. They can be used to determine if the request handler supports the features and proxies passed to yt-dlp.
     _SUPPORTED_FEATURES = None

@@ -16,6 +16,9 @@ class ExampleGetPOTProviderRH(GetPOTProvider):  # ⚠ The class name must end in
     # Supported Innertube clients, as defined in yt_dlp.extractor.youtube.INNERTUBE_CLIENTS
     _SUPPORTED_CLIENTS = ('web', 'web_embedded', 'web_music')
 
+    # Optional: Define the version of the provider. Shown in debug output for debugging purposes.
+    VERSION = '0.0.1'
+
     # ℹ️ If you implementation calls out to an external source not via ydl.urlopen (e.g. through a browser),
     # you should define proxy support with:
     # _SUPPORTED_PROXY_SCHEMES = ('http', ...)
