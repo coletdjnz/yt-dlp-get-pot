@@ -27,7 +27,7 @@ jobs:
         tag=${tag}
         version_raw=$(hatch project metadata | jq -r .version)
         version=v$(hatch project metadata | jq -r .version)
-        project_name="$(hatch project metadata | jq -r .name)"
+        project_name=$(hatch project metadata | jq -r .name)
         EOF
         echo "::endgroup::"
     - name: Get Changelog Entry
@@ -72,8 +72,8 @@ jobs:
       uses: ncipollo/release-action@v1
       with:
         tag: ${{ steps.set_variables.outputs.version }}
-        release_name: ${{ steps.set_variables.outputs.project_name }} ${{ steps.set_variables.outputs.version }}
-        body: ${{ steps.changelog_reader.outputs.changelog }}
+        name: ${{ steps.set_variables.outputs.project_name }} ${{ steps.set_variables.outputs.version }}
+        body: ${{ steps.changelog_reader.outputs.changes }}
         draft: false
         # makeLatest: true
         prerelease: true
