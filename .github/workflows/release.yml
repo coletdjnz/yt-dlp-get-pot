@@ -27,6 +27,7 @@ jobs:
         tag=${tag}
         version_raw=$(hatch project metadata | jq -r .version)
         version=v$(hatch project metadata | jq -r .version)
+        project_name="$(hatch project metadata | jq -r .name)"
         EOF
         echo "::endgroup::"
     - name: Get Changelog Entry
@@ -36,7 +37,7 @@ jobs:
         validation_level: error
         version: ${{ steps.set_variables.outputs.version_raw }}
         path: ./CHANGELOG.md
-    - name: Bundle and create release
+    - name: Bundle release
       env:
         GH_TOKEN: ${{ github.token }}
         tag: ${{ steps.set_variables.outputs.tag }}
@@ -44,7 +45,6 @@ jobs:
       if: |
         env.tag != env.version
       run: |
-        project_name="$(hatch project metadata | jq -r .name)"
         sources="$(\
           hatch run default:pip list --verbose --format json \
           | jq -r '.[] | select(.editable_project_location == null) | "\(.name);\(.location)"' \
@@ -62,13 +62,24 @@ jobs:
         done <<<"${sources}"
         cd bundle/
         find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
-        zip -9 --recurse-paths "${project_name}" *
-        printf "%s" "${{ steps.changelog_reader.outputs.changes }}" > changes.txt
-        gh release create "${version}" \
-          --title "${project_name} ${version}" \
-          --notes-file changes.txt \
-          --prerelease \
-          "${project_name}.zip"
+        zip -9 --recurse-paths "${{ steps.set_variables.outputs.project_name }}" *
+#        gh release create "${version}" \
+#                  --title "${project_name} ${version}" \
+#                  --notes-file changes.txt \
+#                  --prerelease \
+#                  "${project_name}.zip"
+    - name: Create release
+      uses: ncipollo/release-action@v1
+      with:
+        tag: ${{ steps.set_variables.outputs.version }}
+        release_name: ${{ steps.set_variables.outputs.project_name }} ${{ steps.set_variables.outputs.version }}
+        body: ${{ steps.changelog_reader.outputs.changelog }}
+        draft: false
+        # makeLatest: true
+        prerelease: true
+        files: |
+          bundle/${project_name}.zip
+
 #  release_pypi:
 #    runs-on: ubuntu-latest
 #    permissions:
