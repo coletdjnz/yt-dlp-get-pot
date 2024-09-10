@@ -77,8 +77,7 @@ jobs:
         draft: false
         # makeLatest: true
         prerelease: true
-        files: |
-          bundle/${project_name}.zip
+        artifacts: bundle/${{ steps.set_variables.outputs.project_name }}.zip
 
 #  release_pypi:
 #    runs-on: ubuntu-latest
