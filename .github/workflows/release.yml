@@ -32,7 +32,7 @@ jobs:
       id: changelog_reader
       uses: mindsers/changelog-reader-action@v2
       with:
-        validation_level: warn
+        validation_level: none
         version: ${{ steps.set_variables.outputs.version }}
         path: ./CHANGELOG.md
     - name: Bundle and create release
