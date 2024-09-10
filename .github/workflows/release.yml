@@ -63,22 +63,17 @@ jobs:
         cd bundle/
         find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
         zip -9 --recurse-paths "${{ steps.set_variables.outputs.project_name }}" *
-        echo -e "${{ steps.changelog_reader.outputs.changes }}" > changes.txt
-        gh release create "${version}" \
-                  --title "${{ steps.set_variables.outputs.project_name }} ${version}" \
-                  --notes-file changes.txt \
-                  --prerelease \
-                  "${{ steps.set_variables.outputs.project_name }}.zip"
-#    - name: Create release
-#      uses: ncipollo/release-action@v1
-#      with:
-#        tag: ${{ steps.set_variables.outputs.version }}
-#        name: ${{ steps.set_variables.outputs.project_name }} ${{ steps.set_variables.outputs.version }}
-#        body: ${{ steps.changelog_reader.outputs.changes }}
-#        draft: false
-#        # makeLatest: true
-#        prerelease: true
-#        artifacts: bundle/${{ steps.set_variables.outputs.project_name }}.zip
+
+    - name: Create release
+      uses: ncipollo/release-action@v1
+      with:
+        tag: ${{ steps.set_variables.outputs.version }}
+        name: ${{ steps.set_variables.outputs.project_name }} ${{ steps.set_variables.outputs.version }}
+        body: ${{ steps.changelog_reader.outputs.changes }}
+        draft: false
+        # makeLatest: true
+        prerelease: true
+        artifacts: bundle/${{ steps.set_variables.outputs.project_name }}.zip
 
 #  release_pypi:
 #    runs-on: ubuntu-latest
