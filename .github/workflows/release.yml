@@ -25,6 +25,7 @@ jobs:
         echo "::group::Variables"
         cat << EOF | tee -a "$GITHUB_OUTPUT"
         tag=${tag}
+        version_raw=$(hatch project metadata | jq -r .version)
         version=v$(hatch project metadata | jq -r .version)
         EOF
         echo "::endgroup::"
@@ -33,7 +34,7 @@ jobs:
       uses: mindsers/changelog-reader-action@v2
       with:
         validation_level: none
-        version: ${{ steps.set_variables.outputs.version }}
+        version: ${{ steps.set_variables.outputs.version_raw }}
         path: ./CHANGELOG.md
     - name: Bundle and create release
       env:
