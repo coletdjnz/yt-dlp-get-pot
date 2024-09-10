@@ -33,7 +33,7 @@ jobs:
       id: changelog_reader
       uses: mindsers/changelog-reader-action@v2
       with:
-        validation_level: none
+        validation_level: error
         version: ${{ steps.set_variables.outputs.version_raw }}
         path: ./CHANGELOG.md
     - name: Bundle and create release
@@ -66,7 +66,7 @@ jobs:
         gh release create "${version}" --latest \
           --title "${project_name} ${version}" \
           --notes "${{ steps.changelog_reader.outputs.changes }}" \
-          --pre-release \
+          --prerelease \
           "${project_name}.zip"
 #  release_pypi:
 #    runs-on: ubuntu-latest
