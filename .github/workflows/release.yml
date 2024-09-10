@@ -63,7 +63,7 @@ jobs:
         cd bundle/
         find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
         zip -9 --recurse-paths "${project_name}" *
-        echo "${{ steps.changelog_reader.outputs.changes }}" > changes.txt
+        printf "%s" "${{ steps.changelog_reader.outputs.changes }}" > changes.txt
         gh release create "${version}" \
           --title "${project_name} ${version}" \
           --notes-file changes.txt \
