@@ -45,7 +45,7 @@ class ProviderLogger:
 
     def warning(self, message, *, once=False):
         if self._logger:
-            self._logger.warning(self.format(message), once)
+            self._logger.warning(self.format(message), once=once)
 
     def error(self, message, *, is_error=True):
         if self._logger:
