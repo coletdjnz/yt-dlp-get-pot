@@ -1,10 +1,6 @@
 # PO Token Plugin Framework for yt-dlp
 
-> [!CAUTION]
-> This plugin is not ready for general use and is awaiting changes to be merged in yt-dlp for it to be functional.
-> Follow https://github.com/yt-dlp/yt-dlp/pull/10648 for updates.
-
-_[what is a PO Token?](https://github.com/yt-dlp/yt-dlp/wiki#po-token-guide)_
+_[What is a PO Token?](https://github.com/yt-dlp/yt-dlp/wiki/Extractors#po-token-guide)_
 
 A plugin framework for yt-dlp that allows the YouTube extractor to request Proof of Origin (PO) Tokens from an external source when needed. 
 It allows for multiple providers to co-exist and provide PO Tokens for different scenarios.
@@ -28,7 +24,7 @@ To use, a user will need both the client plugin (this plugin) and one or more pr
 > 
 > You may be able to find provider plugins in the [yt-dlp-plugins-get-pot](https://github.com/topics/yt-dlp-plugins-get-pot) topic.
 
-Requires yt-dlp `2024.08.XX` or above.
+**Requires yt-dlp `NIGHTLY 2024.09.13.105220` or above.**
 
 If yt-dlp is installed through `pip` or `pipx`, you can install the plugin with the following:
 
@@ -112,5 +108,5 @@ For general plugin debugging tips, consult the [yt-dlp plugin development wiki](
 - Your implementation should consider caching the PO Token for the given parameters to avoid unnecessary requests.
 - If publishing to GitHub, add the [yt-dlp-plugins-get-pot](https://github.com/topics/yt-dlp-plugins-get-pot) topic to your repository to help users find your provider plugin.
 - If publishing to PyPI, add the `yt-dlp-plugins-get-pot` keyword to your package to help users find your provider plugin.
-- The [PO Token Guide](https://github.com/yt-dlp/yt-dlp/wiki#po-token-guide) has more information on PO Tokens.
+- The [PO Token Guide](https://github.com/yt-dlp/yt-dlp/wiki/Extractors#po-token-guide) has more information on PO Tokens.
 - Advanced: A `Provider` is a customized yt-dlp HTTP Request Handler, so any parameters and functions that are available to the `RequestHandler` are also available to a `Provider`. Check out `yt_dlp.networking.common.RequestHandler` to see more.
