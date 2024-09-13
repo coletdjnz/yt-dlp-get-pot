@@ -1,10 +1,6 @@
 # PO Token Plugin Framework for yt-dlp
 
-> [!CAUTION]
-> This plugin is not ready for general use and is awaiting changes to be merged in yt-dlp for it to be functional.
-> Follow https://github.com/yt-dlp/yt-dlp/pull/10648 for updates.
-
-_[what is a PO Token?](https://github.com/yt-dlp/yt-dlp/wiki#po-token-guide)_
+_[what is a PO Token?](https://github.com/yt-dlp/yt-dlp/wiki/Extractors#po-token-guide)_
 
 A plugin framework for yt-dlp that allows the YouTube extractor to request Proof of Origin (PO) Tokens from an external source when needed. 
 It allows for multiple providers to co-exist and provide PO Tokens for different scenarios.
