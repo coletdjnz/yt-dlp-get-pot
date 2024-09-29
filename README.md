@@ -24,7 +24,7 @@ To use, a user will need both the client plugin (this plugin) and one or more pr
 > 
 > You may be able to find provider plugins in the [yt-dlp-plugins-get-pot](https://github.com/topics/yt-dlp-plugins-get-pot) topic.
 
-**Requires yt-dlp `NIGHTLY 2024.09.13.232912` or above.**
+**Requires yt-dlp `2024.09.27` or above.**
 
 If yt-dlp is installed through `pip` or `pipx`, you can install the plugin with the following:
 
