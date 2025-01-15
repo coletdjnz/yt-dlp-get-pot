@@ -32,39 +32,55 @@ class _GetPOTClient(YoutubeIE, plugin_name='GetPOT'):
 
             downloader.write_debug(f'[GetPOT] PO Token Providers: {display_list}', only_once=True)
 
-    def _fetch_po_token(self, client, visitor_data=None, data_sync_id=None, player_url=None, **kwargs):
+    def _fetch_po_token(
+            self,
+            client,
+            visitor_data=None,
+            data_sync_id=None,
+            player_url=None,
+            context=None,
+            video_id=None,
+            **kwargs
+        ):
         # use any existing implementation
         pot = super()._fetch_po_token(
             client=client,
             visitor_data=visitor_data,
             data_sync_id=data_sync_id,
             player_url=player_url,
+            context=context,
+            video_id=video_id,
             **kwargs
         )
 
         if pot:
             return pot
 
+        # default to gvs for compatibility with older yt-dlp versions
+        context = (context or 'gvs').lower()
+
         params = {
             'client': client,
             'visitor_data': visitor_data,
             'data_sync_id': data_sync_id,
             'player_url': player_url,
+            'context': context,
+            'video_id': video_id,
             **kwargs
         }
 
         try:
-            self._downloader.write_debug(f'[GetPOT] Fetching PO Token for {client} client')
+            self._downloader.write_debug(f'[GetPOT] Fetching {context} PO Token for {client} client')
             pot_response = self._parse_json(
                 self._provider_rd.send(Request('get-pot:', extensions={'ydl': self._downloader, 'getpot': params})).read(),
                 video_id='GetPOT')
 
         except NoSupportingHandlers:
-            self._downloader.write_debug(f'[GetPOT] No provider available for {client} client')
+            self._downloader.write_debug(f'[GetPOT] No {context} PO Token provider available for {client} client')
             return
 
         except RequestError as e:
-            self._downloader.report_warning(f'[GetPOT] Failed to fetch PO Token for {client} client: {e}')
+            self._downloader.report_warning(f'[GetPOT] Failed to fetch {context} PO Token for {client} client: {e}')
             return
 
         pot = pot_response.get('po_token')

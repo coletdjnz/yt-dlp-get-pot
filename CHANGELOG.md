@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Support new PO Token context requested by yt-dlp.
+
 ## [0.2.0]
 
 ### Changed

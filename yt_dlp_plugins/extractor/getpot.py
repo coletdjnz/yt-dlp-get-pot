@@ -113,8 +113,17 @@ class GetPOTProvider(RequestHandler, abc.ABC):
         except NoSupportingHandlers as e:
             raise RequestError(cause=e) from e
 
-    def _validate_get_pot(self, client: str, ydl: YoutubeDL, visitor_data=None, data_sync_id=None, player_url=None,
-                          **kwargs):
+    def _validate_get_pot(
+            self,
+            client: str,
+            ydl: YoutubeDL,
+            visitor_data=None,
+            data_sync_id=None,
+            player_url=None,
+            context=None,
+            video_id=None,
+            **kwargs
+    ):
         """
         Validate and check the GetPOT request is supported.
         :param client: Innertube client, from yt_dlp.extractor.youtube.INNERTUBE_CLIENTS.
@@ -122,13 +131,24 @@ class GetPOTProvider(RequestHandler, abc.ABC):
         :param visitor_data: Visitor Data.
         :param data_sync_id: Data Sync ID. Only provided if yt-dlp is running with an account.
         :param player_url: Player URL. Only provided if the client is BotGuard based (requires JS player).
+        :param context: PO Token context. "gvs" or "player".
+        :param video_id: Video ID.
         :param kwargs: Additional arguments that may be passed in the future.
         :raises UnsupportedRequest: If the request is unsupported.
         """
 
     @abc.abstractmethod
-    def _get_pot(self, client: str, ydl: YoutubeDL, visitor_data=None, data_sync_id=None, player_url=None,
-                 **kwargs) -> str:
+    def _get_pot(
+            self,
+            client: str,
+            ydl: YoutubeDL,
+            visitor_data=None,
+            data_sync_id=None,
+            player_url=None,
+            context=None,
+            video_id=None,
+            **kwargs
+    ) -> str:
         """
         Get a PO Token
         :param client: Innertube client, from yt_dlp.extractor.youtube.INNERTUBE_CLIENTS.
@@ -136,6 +156,8 @@ class GetPOTProvider(RequestHandler, abc.ABC):
         :param visitor_data: Visitor Data.
         :param data_sync_id: Data Sync ID. Only provided if yt-dlp is running with an account.
         :param player_url: Player URL. Only provided if the client is BotGuard based (requires JS player).
+        :param context: PO Token context. "gvs" or "player".
+        :param video_id: Video ID.
         :param kwargs: Additional arguments that may be passed in the future.
         :returns: PO Token
         :raises RequestError: If the request fails.

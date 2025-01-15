@@ -75,11 +75,13 @@ class TestClient:
     def test_get_pot(self):
         with YoutubeDL() as ydl:
             ie = ydl.get_info_extractor('Youtube')
-            pot = json.loads(ie.fetch_po_token('web', visitor_data='visitor', data_sync_id='sync', extra_params='extra'))
+            pot = json.loads(ie.fetch_po_token('web', visitor_data='visitor', data_sync_id='sync', extra_params='extra', video_id='xyz', context='GVS'))
             assert pot['client'] == 'web'
             assert pot['visitor_data'] == 'visitor'
             assert pot['data_sync_id'] == 'sync'
             assert pot['extra_params'] == 'extra'
+            assert pot['context'] == 'gvs'
+            assert pot['video_id'] == 'xyz'
             assert pot['player_url'] is None
 
     def test_get_pot_unsupported_client(self):
@@ -93,6 +95,13 @@ class TestClient:
             ie = ydl.get_info_extractor('Youtube')
             pot = ie.fetch_po_token('web', error_scenario='network')
             assert pot is None
+
+
+    def test_default_context(self):
+        with YoutubeDL() as ydl:
+            ie = ydl.get_info_extractor('Youtube')
+            pot = json.loads(ie.fetch_po_token('web'))
+            assert pot['context'] == 'gvs'
 
 
 class TestProviderValidation:
