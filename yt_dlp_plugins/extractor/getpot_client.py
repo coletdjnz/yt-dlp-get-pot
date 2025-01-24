@@ -35,21 +35,13 @@ class _GetPOTClient(YoutubeIE, plugin_name='GetPOT'):
     def _fetch_po_token(
             self,
             client,
-            visitor_data=None,
-            data_sync_id=None,
-            player_url=None,
             context=None,
-            video_id=None,
             **kwargs
         ):
         # use any existing implementation
         pot = super()._fetch_po_token(
             client=client,
-            visitor_data=visitor_data,
-            data_sync_id=data_sync_id,
-            player_url=player_url,
             context=context,
-            video_id=video_id,
             **kwargs
         )
 
@@ -61,11 +53,7 @@ class _GetPOTClient(YoutubeIE, plugin_name='GetPOT'):
 
         params = {
             'client': client,
-            'visitor_data': visitor_data,
-            'data_sync_id': data_sync_id,
-            'player_url': player_url,
             'context': context,
-            'video_id': video_id,
             **kwargs
         }
 

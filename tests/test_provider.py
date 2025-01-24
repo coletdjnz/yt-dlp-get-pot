@@ -109,8 +109,15 @@ class TestProviderValidation:
         with YoutubeDL() as ydl, ExampleProviderRH(logger=FakeLogger()) as provider:
             provider.validate(Request('get-pot:', extensions={'getpot': {'client': 'web'}, 'ydl': ydl}))
 
-            with pytest.raises(UnsupportedRequest, match=r'^Client android is not supported$'):
+            with pytest.raises(UnsupportedRequest, match=r'^Client "android" is not supported. Supported clients: web$'):
                 provider.validate(Request('get-pot:', extensions={'getpot': {'client': 'android'}, 'ydl': ydl}))
+
+    def test_validate_supported_contexts(self):
+        with YoutubeDL() as ydl, ExampleProviderRH(logger=FakeLogger()) as provider:
+            provider.validate(Request('get-pot:', extensions={'getpot': {'client': 'web', 'context': 'gvs'}, 'ydl': ydl}))
+
+            with pytest.raises(UnsupportedRequest, match=r'^PO Token context "player" is not supported. Supported contexts: gvs$'):
+                provider.validate(Request('get-pot:', extensions={'getpot': {'client': 'web', 'context': 'player'}, 'ydl': ydl}))
 
     @pytest.mark.parametrize('extensions', [
         {'getpot': 'invalid'},

@@ -58,6 +58,9 @@ class GetPOTProvider(RequestHandler, abc.ABC):
     # Supported Innertube clients, as defined in yt_dlp.extractor.youtube.INNERTUBE_CLIENTS
     _SUPPORTED_CLIENTS = ()
 
+    # Support PO Token contexts. "gvs" (Google Video Server) is the default for backwards compatibility.
+    _SUPPORTED_CONTEXTS = ['gvs']
+
     # Version of the provider. Shown in debug output for debugging purposes.
     VERSION = None
 
@@ -93,7 +96,11 @@ class GetPOTProvider(RequestHandler, abc.ABC):
         client = pot_request.pop('client')
 
         if client not in self._SUPPORTED_CLIENTS:
-            raise UnsupportedRequest(f'Client {client} is not supported')
+            raise UnsupportedRequest(f'Client "{client}" is not supported. Supported clients: {", ".join(self._SUPPORTED_CLIENTS)}')
+
+        context = pot_request.get('context')
+        if context and self._SUPPORTED_CONTEXTS and context not in self._SUPPORTED_CONTEXTS:
+            raise UnsupportedRequest(f'PO Token context "{context}" is not supported. Supported contexts: {", ".join(self._SUPPORTED_CONTEXTS)}')
 
         self._validate_get_pot(
             client=client,
@@ -119,9 +126,11 @@ class GetPOTProvider(RequestHandler, abc.ABC):
             ydl: YoutubeDL,
             visitor_data=None,
             data_sync_id=None,
+            session_index=None,
             player_url=None,
             context=None,
             video_id=None,
+            ytcfg=None,
             **kwargs
     ):
         """
@@ -130,9 +139,11 @@ class GetPOTProvider(RequestHandler, abc.ABC):
         :param ydl: YoutubeDL instance.
         :param visitor_data: Visitor Data.
         :param data_sync_id: Data Sync ID. Only provided if yt-dlp is running with an account.
+        :param session_index: Session Index.
         :param player_url: Player URL. Only provided if the client is BotGuard based (requires JS player).
         :param context: PO Token context. "gvs" or "player".
         :param video_id: Video ID.
+        :param ytcfg: The ytcfg yt-dlp will use for the client to make Innertube requests.
         :param kwargs: Additional arguments that may be passed in the future.
         :raises UnsupportedRequest: If the request is unsupported.
         """
@@ -144,9 +155,11 @@ class GetPOTProvider(RequestHandler, abc.ABC):
             ydl: YoutubeDL,
             visitor_data=None,
             data_sync_id=None,
+            session_index=None,
             player_url=None,
             context=None,
             video_id=None,
+            ytcfg=None,
             **kwargs
     ) -> str:
         """
@@ -155,9 +168,11 @@ class GetPOTProvider(RequestHandler, abc.ABC):
         :param ydl: YoutubeDL instance.
         :param visitor_data: Visitor Data.
         :param data_sync_id: Data Sync ID. Only provided if yt-dlp is running with an account.
+        :param session_index: Session Index.
         :param player_url: Player URL. Only provided if the client is BotGuard based (requires JS player).
         :param context: PO Token context. "gvs" or "player".
         :param video_id: Video ID.
+        :param ytcfg: The ytcfg yt-dlp will use for the client to make Innertube requests.
         :param kwargs: Additional arguments that may be passed in the future.
         :returns: PO Token
         :raises RequestError: If the request fails.
