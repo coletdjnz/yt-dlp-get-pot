@@ -16,6 +16,9 @@ class ExampleGetPOTProviderRH(GetPOTProvider):  # ⚠ The class name must end in
     # Supported Innertube clients, as defined in yt_dlp.extractor.youtube.INNERTUBE_CLIENTS
     _SUPPORTED_CLIENTS = ('web', 'web_embedded', 'web_music')
 
+    # Support PO Token contexts. "gvs" (Google Video Server) or "player". Default is "gvs".
+    # _SUPPORTED_CONTEXTS = ('gvs', 'player')
+
     # Optional: Define the version of the provider. Shown in debug output for debugging purposes.
     VERSION = '0.0.1'
 
@@ -27,19 +30,20 @@ class ExampleGetPOTProviderRH(GetPOTProvider):  # ⚠ The class name must end in
     # You can get the proxies for the request with `self._get_proxies(request)`
 
     # Optional
-    def _validate_get_pot(self, client: str, ydl: YoutubeDL, visitor_data=None, data_sync_id=None, player_url=None, **kwargs):
+    def _validate_get_pot(self, client: str, ydl: YoutubeDL, data_sync_id=None, **kwargs):
         # ℹ️ If you need to validate the request before making the request to the external source, do it here.
         # Raise yt_dlp.networking.exceptions.UnsupportedRequest if the request is not valid.
         if data_sync_id:
             raise UnsupportedRequest('Fetching PO Token for accounts is not supported')
 
     # ℹ️ Implement this method
-    def _get_pot(self, client: str, ydl: YoutubeDL, visitor_data=None, data_sync_id=None, player_url=None, **kwargs) -> str:
+    def _get_pot(self, client: str, ydl: YoutubeDL, visitor_data=None, data_sync_id=None, player_url=None, context=None, video_id=None, **kwargs) -> str:
         # You should use the ydl instance to make requests where possible,
         # as it will handle cookies and other networking settings passed to yt-dlp.
         response = ydl.urlopen(Request('https://example.com/get_pot', data=json.dumps({
             'client': client,
-            'visitor_data': visitor_data
+            'visitor_data': visitor_data,
+            'context': context,
         }).encode()))
 
         # If you need access to the YoutubeIE instance

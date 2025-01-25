@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Support new PO Token context requested by yt-dlp. By default, providers only support "gvs" PO Token context for backwards compatibility.
+
 ## [0.2.0]
 
 ### Changed
