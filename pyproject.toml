@@ -4,9 +4,9 @@ build-backend = "hatchling.build"
 
 [project]
 name = "yt-dlp-get-pot"
-version = "0.2.0"
+version = "0.3.0"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 license = { file = "LICENSE"}
 keywords = ["yt-dlp", "yt-dlp-plugin", "yt-dlp-plugins-get-pot"]
 authors = [

@@ -2,9 +2,12 @@
 
 ## [Unreleased]
 
+## [0.3.0]
+
 ### Changed
 
-- Support new PO Token context requested by yt-dlp. By default, providers only support "gvs" PO Token context for backwards compatibility.
+- Document new variables passed down from yt-dlp
+- Added `_SUPPORTED_CONTEXTS` attribute to Provider to specify supported PO Token contexts. If not specified, the provider will only support "gvs" context.
 
 ## [0.2.0]
 
@@ -30,7 +33,8 @@
 - Improve logging output
 - Re-raise `NoSupportingHandlers` error raised within a Provider as a `RequestError`
 
-[unreleased]: https://github.com/coletdjnz/yt-dlp-get-pot/compare/v0.2.0...HEAD
+[unreleased]: https://github.com/coletdjnz/yt-dlp-get-pot/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/coletdjnz/yt-dlp-get-pot/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/coletdjnz/yt-dlp-get-pot/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/coletdjnz/yt-dlp-get-pot/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/coletdjnz/yt-dlp-get-pot/compare/v0.0.3...v0.1.0
